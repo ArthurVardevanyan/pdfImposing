@@ -2,7 +2,6 @@
 __version__ = "v20200117"
 
 import PyPDF2
-import sys
 
 
 def normalShuffle(inFile, str):
@@ -29,6 +28,14 @@ def stackShuffle(inFile, str):
     output = PyPDF2.PdfFileWriter()
     RULES = [int(s) for s in str.split() if s.isdigit()]
     pages = []
+    temp = PyPDF2.PdfFileWriter()
+    for iter in range(0, (doc.getNumPages())):
+        temp.addPage(doc.getPage(iter))
+    doc = temp
+    while((doc.getNumPages() % len(RULES))):
+        doc.addPage(PyPDF2.pdf.PageObject.createBlankPage(doc.getPage(0), doc.getPage(
+            0).mediaBox.getWidth(), doc.getPage(0).mediaBox.getHeight()))
+    print(doc.getNumPages())
     for iter in range(0, int(doc.getNumPages()/len(RULES))):
         for i in range(0, len(RULES)):
             pages.append(doc.getPage(
@@ -43,7 +50,7 @@ def stackShuffle(inFile, str):
 
 def main():
 
-    stackShuffle("sample/8page.pdf", "1 2")
+    stackShuffle("sample/8page.pdf", "1 2 3")
 
 
 if __name__ == "__main__":
