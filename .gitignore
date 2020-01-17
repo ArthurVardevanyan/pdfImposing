@@ -1,4 +1,5 @@
 .vscode/
 __pycache__/
+sample/
 doc/pdfImposerTime.ods
 doc/.~lock.pdfImposerTime.ods#
