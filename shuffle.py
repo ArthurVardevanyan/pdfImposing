@@ -7,13 +7,21 @@ import PyPDF2
 def normalShuffle(inFile, str):
 
     doc = PyPDF2.PdfFileReader(open(inFile, "rb"))
+    docR = PyPDF2.PdfFileReader(open(inFile, "rb"))
+
     output = PyPDF2.PdfFileWriter()
-    RULES = [int(s) for s in str.split() if s.isdigit()]
+    #RULES = [int(s) for s in str.split() if s.isdigit()]
+    RULES = list(str)[::2]
+    RULE_MOD = list(str)[1::2] 
+
     pages = []
-    for iter in range(0, int(doc.getNumPages()), len(RULES)):
+    for iter in range(0, int(doc.getNumPages()), len(set(RULES))):
 
         for i in range(0, len(RULES)):
-            pages.append(doc.getPage(iter+int(RULES[i])-1))
+            if (RULE_MOD[i] == "*"):
+                pages.append(docR.getPage(iter+int(RULES[i])-1).rotateClockwise(180))
+            else:
+                pages.append(doc.getPage(iter+int(RULES[i])-1))
 
     for page in pages:
         output.addPage(page)
@@ -50,7 +58,8 @@ def stackShuffle(inFile, str):
 
 def main():
 
-    stackShuffle("sample/8page.pdf", "1 2 3")
+    #Space For No Modifier, * For 180 Flip
+    normalShuffle("sample/8page.pdf", "1 1*2*2 ")
 
 
 if __name__ == "__main__":
