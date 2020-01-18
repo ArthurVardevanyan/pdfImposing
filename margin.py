@@ -13,8 +13,8 @@ def margin(doc):
         page = doc.getPage(iter)
         docS = PyPDF2.pdf.PageObject.createBlankPage(
             page, page.mediaBox.getWidth(),  page.mediaBox.getHeight())
-        leftmargin = (page.mediaBox.getWidth() * .03 / 2)
-        bottommargin = (page.mediaBox.getHeight() * .03 / 2)
+        leftmargin = (float(page.mediaBox.getWidth()) * .03 / 2)
+        bottommargin = (float(page.mediaBox.getHeight()) * .03 / 2)
         docS.mergeScaledTranslatedPage(page, .97, leftmargin, bottommargin)
         output.addPage(docS)
 
