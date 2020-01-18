@@ -52,6 +52,22 @@ def stackShuffle(doc, str):
 
     return output
 
+def bookletShuffle(doc):
+
+    output = PyPDF2.PdfFileWriter()
+    pages = []
+    
+   
+    # print(doc.getNumPages())
+    for iter in range(0, int(doc.getNumPages()/2)):
+        pages.append(doc.getPage(int(doc.getNumPages()-1 - iter)))
+        pages.append(doc.getPage(iter))
+
+    for page in pages:
+        output.addPage(page)
+
+    return output
+
 
 def main():
 
