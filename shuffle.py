@@ -1,5 +1,5 @@
 # shuffle.py
-__version__ = "v20200117"
+__version__ = "v20200120"
 
 import PyPDF2
 
@@ -71,12 +71,12 @@ def bookletShuffle(doc):
 
 def main():
 
-    inFile = "sample/blackPage_scaled.pdf"
+    inFile = "sample/100.pdf"
     doc = PyPDF2.PdfFileReader(open(inFile, "rb"))
-    docR = PyPDF2.PdfFileReader(open(inFile, "rb"))
+    #docR = PyPDF2.PdfFileReader(open(inFile, "rb"))
 
     # Space For No Modifier, * For 180 Flip
-    output = normalShuffle(doc, docR, "1 1*")
+    output = stackShuffle(doc, "1 2")
     outputStream = open(inFile[:-4] + "_stackShuffled.pdf", "wb")
     output.write(outputStream)
 

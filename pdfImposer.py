@@ -1,5 +1,5 @@
 # pdfImposer.py
-__version__ = "v20200117"
+__version__ = "v20200120"
 
 import PyPDF2
 import os
@@ -35,6 +35,7 @@ def ledgerDuplexTwoUpSpinCut(inFile):
     if os.path.exists(filePath):
         os.remove(filePath)
 
+
 def booklet(inFile):
     doc = PyPDF2.PdfFileReader(open(inFile, "rb"))
     print("Margins")
@@ -61,12 +62,42 @@ def booklet(inFile):
     if os.path.exists(filePath):
         os.remove(filePath)
 
+
+def SimplexStackCut(inFile):
+
+    print("StackShuffle")
+    doc = PyPDF2.PdfFileReader(open(inFile, "rb"))
+    output = shuffle.normalShuffle(doc, doc, "1 2 4 3 ")
+    output = shuffle.stackShuffle(doc, "1 2")
+    print("Nup")
+    output = nup.nup(output)
+    outputStream = open(inFile[:-4] + "_simplexStackShuffledNup.pdf", "wb")
+    output.write(outputStream)
+
+
+
+def DuplexStackCut(inFile):
+
+    doc = PyPDF2.PdfFileReader(open(inFile, "rb"))
+    docR = PyPDF2.PdfFileReader(open(inFile, "rb"))
+    print("Duplex Shuffle")
+    output = shuffle.normalShuffle(doc, docR, "1 2 4 3 ")
+    print("StackShuffle")
+    output = shuffle.stackShuffle(output, "1 2")
+    print("Nup")
+    output = nup.nup(output)
+    outputStream = open(inFile[:-4] + "_DuplexStackShuffledNup.pdf", "wb")
+    output.write(outputStream)
+
+
+
 def main():
     inFile = sys.argv[1]
-    #inFile = "sample/blackPage.pdf"
-    #ledgerDuplexTwoUpSpinCut(inFile)
 
-    booklet(inFile)
+    SimplexStackCut(inFile)
+    # inFile = "sample/blackPage.pdf"
+    # ledgerDuplexTwoUpSpinCut(inFile)
+    # booklet(inFile)
 
 
 if __name__ == "__main__":
