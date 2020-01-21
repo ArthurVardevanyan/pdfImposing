@@ -1,5 +1,5 @@
 # pdfImposer.py
-__version__ = "v20200120"
+__version__ = "v20200121"
 
 import PyPDF2
 import os
@@ -67,7 +67,6 @@ def SimplexStackCut(inFile):
 
     print("StackShuffle")
     doc = PyPDF2.PdfFileReader(open(inFile, "rb"))
-    output = shuffle.normalShuffle(doc, doc, "1 2 4 3 ")
     output = shuffle.stackShuffle(doc, "1 2")
     print("Nup")
     output = nup.nup(output)
@@ -96,7 +95,7 @@ def main():
 
     SimplexStackCut(inFile)
     # inFile = "sample/blackPage.pdf"
-    # ledgerDuplexTwoUpSpinCut(inFile)
+    #ledgerDuplexTwoUpSpinCut(inFile)
     # booklet(inFile)
 
 
