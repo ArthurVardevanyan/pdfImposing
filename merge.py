@@ -24,7 +24,8 @@ def merge(FOLDER, DUPLEX):
 
 def main():
 
-    folder = ""
+    #folder = ""
+    folder = "sample/test/"
 
     output = merge(folder, False)
     outputStream = open("merged.pdf", "wb")
