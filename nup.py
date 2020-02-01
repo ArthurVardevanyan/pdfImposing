@@ -1,5 +1,5 @@
 # nup.py
-__version__ = "v20200117"
+__version__ = "v20200121"
 
 import PyPDF2
 
@@ -15,13 +15,20 @@ def nup(doc):
         rhs = doc.getPage(iter+1)
         rotationL = lhs.get('/Rotate')
         rotationR = rhs.get('/Rotate')
-        if(rotationL):
+
+        if(rotationL == 180):
             lhs.mergeRotatedTranslatedPage(
                 rhs, 180, 0,  int(lhs.mediaBox.getUpperRight_y()/2), True)
 
-        elif(rotationR):
+        elif(rotationR == 180):
             lhs.mergeRotatedTranslatedPage(
                 rhs, 180, lhs.mediaBox.getUpperRight_x(),  int(lhs.mediaBox.getUpperRight_y()/2), True)
+
+        if(rotationL == 90 and rotationR == 90):
+            lhs.mergeTranslatedPage(
+                rhs, 0, lhs.mediaBox.getUpperRight_y(), True)
+
+           
         else:
             lhs.mergeTranslatedPage(
                 rhs, lhs.mediaBox.getUpperRight_x(), 0, True)
