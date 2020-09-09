@@ -4,6 +4,14 @@ __version__ = "v20200120"
 import PyPDF2
 
 
+def shuffleEvenOdd(doc, docR):
+    #TODO
+    return False
+
+def reverseShuffleEvenOdd(doc, docR):
+    #TODO
+    return False
+
 def normalShuffle(doc, docR, str):
 
     output = PyPDF2.PdfFileWriter()
