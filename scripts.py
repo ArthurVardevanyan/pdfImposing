@@ -8,6 +8,7 @@ import margin
 import shuffle
 import nup
 
+
 def ledgerDuplexTwoUpSpinCut(inFile, outFile=None):
     if outFile == None:
         outFile = inFile
@@ -130,12 +131,3 @@ def DuplexStackCut(inFile):
     outputStream = open(inFile[:-4] + "_DuplexStackShuffledNup.pdf", "wb")
     output.write(outputStream)
 
-
-
-
-    #inFile = sys.argv[1]
-
-    #SimplexStackCut(inFile)
-    # inFile = "sample/blackPage.pdf"
-    # ledgerDuplexTwoUpSpinCut(inFile)
-    # booklet(inFile)
