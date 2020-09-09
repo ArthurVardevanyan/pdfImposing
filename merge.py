@@ -5,15 +5,22 @@ import PyPDF2
 import files
 
 
-def merge(FOLDER, DUPLEX):
+def mergeScript(FILES, DUPLEX):
+
+    output = merge(FILES, DUPLEX)
+    outputStream = open("merged.pdf", "wb")
+    output.write(outputStream)
+
+
+def merge(FILES, DUPLEX):
 
     output = PyPDF2.PdfFileWriter()
 
-    FILES = files.file_list(FOLDER)
+    #FILES = files.file_list(FOLDER)
 
     for FILE in FILES:
         pages = []
-        test = open(FOLDER + FILE, "rb")
+        test = open(FILE, "rb")  # FOLDER +
         doc = PyPDF2.PdfFileReader(test)
         pageCount = int(doc.getNumPages())
         for iter in range(0, pageCount):
