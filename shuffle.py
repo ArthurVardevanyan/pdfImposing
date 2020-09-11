@@ -1,21 +1,65 @@
 # shuffle.py
-__version__ = "v20200120"
+__version__ = "v20200910"
 
 import PyPDF2
 
 
 def shuffleEvenOdd(doc, docR):
-    #TODO
+    # TODO
     return False
 
+
 def reverseShuffleEvenOdd(doc, docR):
-    #TODO
+    # TODO
     return False
+
+
+def addBlank(doc, pages):
+    output = PyPDF2.PdfFileWriter()
+    pages = pages.replace(" ", "")
+    pages = [int(n) for n in list(pages.split(","))]
+    pages.sort()
+    additional = 0
+    for iter in range(0, doc.getNumPages()):
+        output.addPage(doc.getPage(iter))
+    for page in pages:
+        if page >= doc.getNumPages():
+            blank = PyPDF2.pdf.PageObject.createBlankPage(doc)
+            output.addPage(blank)
+        else:
+            output.insertBlankPage(index=page+additional)
+            additional += 1
+    return output
+
+
+def removePage(doc, pages):
+    output = PyPDF2.PdfFileWriter()
+    pages = pages.replace(" ", "")
+    pages = [int(n) for n in list(pages.split(","))]
+    pages.sort()
+    additional = 0
+    for iter in range(0, doc.getNumPages()):
+        if(len(pages)):
+            if pages[0] == iter + 1:
+                pages.pop(0)
+            else:
+                output.addPage(doc.getPage(iter))
+        else:
+            output.addPage(doc.getPage(iter))
+    for page in pages:
+        if page >= doc.getNumPages():
+            blank = PyPDF2.pdf.PageObject.createBlankPage(doc)
+            output.addPage(blank)
+        else:
+            output.insertBlankPage(index=page+additional)
+            additional += 1
+    return output
+
 
 def normalShuffle(doc, docR, str):
 
     output = PyPDF2.PdfFileWriter()
-    #RULES = [int(s) for s in str.split() if s.isdigit()]
+    # RULES = [int(s) for s in str.split() if s.isdigit()]
     RULES = list(str)[::2]
     RULE_MOD = list(str)[1::2]
 
@@ -60,12 +104,12 @@ def stackShuffle(doc, str):
 
     return output
 
+
 def bookletShuffle(doc):
 
     output = PyPDF2.PdfFileWriter()
     pages = []
-    
-   
+
     # print(doc.getNumPages())
     for iter in range(0, int(doc.getNumPages()/2)):
         pages.append(doc.getPage(int(doc.getNumPages()-1 - iter)))
@@ -81,7 +125,7 @@ def main():
 
     inFile = "sample/100.pdf"
     doc = PyPDF2.PdfFileReader(open(inFile, "rb"))
-    #docR = PyPDF2.PdfFileReader(open(inFile, "rb"))
+    # docR = PyPDF2.PdfFileReader(open(inFile, "rb"))
 
     # Space For No Modifier, * For 180 Flip
     output = stackShuffle(doc, "1 2")
