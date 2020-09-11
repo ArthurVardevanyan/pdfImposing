@@ -1,11 +1,12 @@
 # pdfImposer.py
-__version__ = "v20200910"
+__version__ = "v20200911"
 
 
 import tkinter as tk
 from tkinter import filedialog
 import scripts
 import merge
+import files
 
 
 class pdfImposing:
@@ -18,6 +19,7 @@ class pdfImposing:
 
         self.upload = tk.Button(root, text='Open', command=self.UploadAction)
         self.upload.pack()
+        self.FILES = []
         self.files = None
 
         self.label = tk.Label(master, text=" ")  # TODO TEMP SPACE
@@ -82,6 +84,9 @@ class pdfImposing:
         # https://stackoverflow.com/a/50135930
         filenames = filedialog.askopenfilenames()
         print('Selected:', filenames)
+        for path in filenames:
+            F = files.InputFiles(path)
+            self.FILES.append(F)
         self.files = filenames
         self.label = tk.Label(text=filenames)
         self.label.pack()
@@ -107,15 +112,16 @@ class pdfImposing:
         self.pageNumbers.pack()
 
     def addSave(self):
-        scripts.addBlankPage(self.files[0], self.pageNumbers.get())
+        scripts.addBlankPage(self.FILES, self.pageNumbers.get())
         print("done")
 
     def removeSave(self):
-        scripts.removePage(self.files[0], self.pageNumbers.get())
+        scripts.removePage(self.FILES, self.pageNumbers.get())
         print("done")
 
     def booklet(self):
-        scripts.booklet(self.files[0])
+        scripts.booklet(self.FILES)
+        print("done")
 
     def SimplexStackCut(self):
         scripts.SimplexStackCut(self.files[0])
