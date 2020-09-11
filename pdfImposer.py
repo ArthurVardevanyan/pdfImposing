@@ -99,12 +99,14 @@ class pdfImposing:
     def UploadAction(self):
         # https://stackoverflow.com/a/50135930
         filenames = filedialog.askopenfilenames()
-        print('Selected:', filenames)
+        print('Selected:', filenames)        
+        fileNames = ""
         for path in filenames:
             F = files.InputFiles(path)
             self.FILES.append(F)
+            fileNames += F.name +".pdf" + "\n"        
         self.files = filenames
-        self.label = tk.Label(text=filenames)
+        self.label = tk.Label(text=fileNames)
         self.label.pack()
 
     def fileMerge(self):
