@@ -1,5 +1,5 @@
 
-__version__ = "v20200910"
+__version__ = "v20200911"
 import os
 import sys
 import PyPDF2
@@ -7,6 +7,7 @@ import time
 import margin
 import shuffle
 import nup
+import files
 
 
 def ledgerDuplexTwoUpSpinCut(inFile, outFile=None):
@@ -80,31 +81,31 @@ def ledgerSimplexTwoUpSpinCut(inFile, outFile=None):
     outputStream.close()
 
 
-def booklet(inFile):
-    doc = PyPDF2.PdfFileReader(open(inFile, "rb"))
-    print("Margins")
-    output = margin.margin(doc)
-    print("Booklet Shuffle 1")
-    output = shuffle.bookletShuffle(output)
-    print("Booklet Shuffle 2")
-    temp = "temp.pdf"
-    outputStream = open(temp, "wb")
-    output.write(outputStream)
-    outputStream.close()
-    inFileR = open(temp, "rb")
-    docR = PyPDF2.PdfFileReader(inFileR)
-    output = shuffle.normalShuffle(output, docR, "1 2 4 3 ")
-    print("Nup")
-    output = nup.nup(output)
-    outputStream = open(inFile[:-4] + "_booklet.pdf", "wb")
-    output.write(outputStream)
+def booklet(FILES):
+    for f in FILES:
+        output = files.ExportFiles(f.path, extension="booklet")
+        print("Margins")
+        output.doc = margin.margin(f.doc)
+        print("Booklet Shuffle 1")
+        output.doc = shuffle.bookletShuffle(output.doc)
+        print("Booklet Shuffle 2")
+        temp = "temp.pdf"
+        outputStream = open(temp, "wb")
+        output.doc.write(outputStream)
+        outputStream.close()
+        inFileR = open(temp, "rb")
+        docR = PyPDF2.PdfFileReader(inFileR)
+        output.doc = shuffle.normalShuffle(output.doc, docR, "1 2 4 3 ")
+        print("Nup")
+        output.doc = nup.nup(output.doc)
+        output.export()
 
-    inFileR.close()
-    outputStream.close()
+        inFileR.close()
+        outputStream.close()
 
-    filePath = "temp.pdf"
-    if os.path.exists(filePath):
-        os.remove(filePath)
+        filePath = "temp.pdf"
+        if os.path.exists(filePath):
+            os.remove(filePath)
 
 
 def SimplexStackCut(inFile):
@@ -132,21 +133,15 @@ def DuplexStackCut(inFile):
     output.write(outputStream)
 
 
-def addBlankPage(inFile, pages):
-
+def addBlankPage(FILES, pages):
     print("addBlankPage")
-    doc = PyPDF2.PdfFileReader(open(inFile, "rb"))
-    output = shuffle.addBlank(doc, pages)
-    outputStream = open(inFile[:-4] + "_modified.pdf", "wb")
-    output.write(outputStream)
+    for f in FILES:
+        output = files.ExportFiles(f.path, shuffle.addBlank(f.doc, pages))
+        output.export()
 
+def removePage(FILES, pages):
 
-
-def removePage(inFile, pages):
-
-    print("addBlankPage")
-    doc = PyPDF2.PdfFileReader(open(inFile, "rb"))
-    output = shuffle.removePage(doc, pages)
-    outputStream = open(inFile[:-4] + "_modified.pdf", "wb")
-    output.write(outputStream)
-
+    print("removePage")
+    for f in FILES:
+        output = files.ExportFiles(f.path, shuffle.removePage(f.doc, pages))
+        output.export()
