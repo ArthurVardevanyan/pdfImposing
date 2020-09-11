@@ -1,17 +1,21 @@
 # shuffle.py
-__version__ = "v20200910"
+__version__ = "v20200911"
 
 import PyPDF2
 
 
-def shuffleEvenOdd(doc, docR):
-    # TODO
-    return False
+def merge(FILES, DUPLEX):
 
+    output = PyPDF2.PdfFileWriter()
+    for FILE in FILES:
 
-def reverseShuffleEvenOdd(doc, docR):
-    # TODO
-    return False
+        pageCount = int(FILE.doc.getNumPages())
+        for iter in range(0, pageCount):
+            output.addPage(FILE.doc.getPage(iter))
+        if(DUPLEX == "True" and pageCount % 2):
+            output.addPage(PyPDF2.pdf.PageObject.createBlankPage(FILE.doc))
+
+    return output
 
 
 def addBlank(doc, pages):
@@ -119,6 +123,16 @@ def bookletShuffle(doc):
         output.addPage(page)
 
     return output
+
+
+def shuffleEvenOdd(doc, docR):
+    # TODO
+    return False
+
+
+def reverseShuffleEvenOdd(doc, docR):
+    # TODO
+    return False
 
 
 def main():

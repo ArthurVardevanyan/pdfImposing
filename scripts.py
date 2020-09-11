@@ -10,6 +10,57 @@ import nup
 import files
 
 
+def mergeScript(FILES, DUPLEX, newName):
+
+    output = files.ExportFiles(FILES[0].path+newName, shuffle.merge(
+        FILES, DUPLEX), extension="merged")
+    output.export()
+
+
+def addBlankPage(FILES, pages):
+    print("addBlankPage")
+    for f in FILES:
+        output = files.ExportFiles(
+            f.filePath(), shuffle.addBlank(f.doc, pages))
+        output.export()
+
+
+def removePage(FILES, pages):
+
+    print("removePage")
+    for f in FILES:
+        output = files.ExportFiles(
+            f.filePath(), shuffle.removePage(f.doc, pages))
+        output.export()
+
+
+def booklet(FILES):
+    for f in FILES:
+        output = files.ExportFiles(f.filePath(), extension="booklet")
+        print("Margins")
+        output.doc = margin.margin(f.doc)
+        print("Booklet Shuffle 1")
+        output.doc = shuffle.bookletShuffle(output.doc)
+        print("Booklet Shuffle 2")
+        temp = "temp.pdf"
+        outputStream = open(temp, "wb")
+        output.doc.write(outputStream)
+        outputStream.close()
+        inFileR = open(temp, "rb")
+        docR = PyPDF2.PdfFileReader(inFileR)
+        output.doc = shuffle.normalShuffle(output.doc, docR, "1 2 4 3 ")
+        print("Nup")
+        output.doc = nup.nup(output.doc)
+        output.export()
+
+        inFileR.close()
+        outputStream.close()
+
+        filePath = "temp.pdf"
+        if os.path.exists(filePath):
+            os.remove(filePath)
+
+
 def ledgerDuplexTwoUpSpinCut(inFile, outFile=None):
     if outFile == None:
         outFile = inFile
@@ -81,33 +132,6 @@ def ledgerSimplexTwoUpSpinCut(inFile, outFile=None):
     outputStream.close()
 
 
-def booklet(FILES):
-    for f in FILES:
-        output = files.ExportFiles(f.path, extension="booklet")
-        print("Margins")
-        output.doc = margin.margin(f.doc)
-        print("Booklet Shuffle 1")
-        output.doc = shuffle.bookletShuffle(output.doc)
-        print("Booklet Shuffle 2")
-        temp = "temp.pdf"
-        outputStream = open(temp, "wb")
-        output.doc.write(outputStream)
-        outputStream.close()
-        inFileR = open(temp, "rb")
-        docR = PyPDF2.PdfFileReader(inFileR)
-        output.doc = shuffle.normalShuffle(output.doc, docR, "1 2 4 3 ")
-        print("Nup")
-        output.doc = nup.nup(output.doc)
-        output.export()
-
-        inFileR.close()
-        outputStream.close()
-
-        filePath = "temp.pdf"
-        if os.path.exists(filePath):
-            os.remove(filePath)
-
-
 def SimplexStackCut(inFile):
 
     print("StackShuffle")
@@ -131,17 +155,3 @@ def DuplexStackCut(inFile):
     output = nup.nup(output)
     outputStream = open(inFile[:-4] + "_DuplexStackShuffledNup.pdf", "wb")
     output.write(outputStream)
-
-
-def addBlankPage(FILES, pages):
-    print("addBlankPage")
-    for f in FILES:
-        output = files.ExportFiles(f.path, shuffle.addBlank(f.doc, pages))
-        output.export()
-
-def removePage(FILES, pages):
-
-    print("removePage")
-    for f in FILES:
-        output = files.ExportFiles(f.path, shuffle.removePage(f.doc, pages))
-        output.export()

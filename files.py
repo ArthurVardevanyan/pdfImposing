@@ -7,12 +7,20 @@ import PyPDF2
 
 
 class Files:
-    def __init__(self, path=None):
-        self.path = path
-        self.name = self.__loadName()
+    def __init__(self, path=None,):
+        self.path = self.__loadPath(path)
+        self.name = self.__loadName(path)
 
-    def __loadName(self):
-        return (self.path.split("/"))[-1]
+    def __loadName(self, path):
+        return (path.split("/"))[-1].replace(".pdf", "")
+
+    def __loadPath(self, path):
+        pos = path.rfind("/")
+        path = path[0:pos+1]
+        return path
+
+    def filePath(self):
+        return self.path + self.name
 
 
 class InputFiles(Files):
@@ -21,11 +29,11 @@ class InputFiles(Files):
         self.doc = self.__loadFile()
 
     def __loadFile(self):
-        return PyPDF2.PdfFileReader(open(self.path, "rb"))
+        return PyPDF2.PdfFileReader(open(self.filePath() + ".pdf", "rb"))
 
 
 class ExportFiles(Files):
-    def __init__(self, path, doc=PyPDF2.PdfFileWriter(), extension="modified"):
+    def __init__(self, path, doc=PyPDF2.PdfFileWriter(), extension="modified", ):
         super().__init__(path)
         self.doc = doc
         self.extension = extension
@@ -36,7 +44,8 @@ class ExportFiles(Files):
         self.__exportFile()
 
     def __exportData(self):
-        return open(self.path[:-4] + "_"+self.extension+".pdf", "wb")
+        return open(self.filePath() + "_"+self.extension+".pdf", "wb")
 
     def __exportFile(self):
         self.doc.write(self.__outputStream)
+        self.__outputStream.close()
