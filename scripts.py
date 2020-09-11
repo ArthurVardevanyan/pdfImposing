@@ -1,5 +1,5 @@
 
-__version__ = "v20200206"
+__version__ = "v20200910"
 import os
 import sys
 import PyPDF2
@@ -129,5 +129,24 @@ def DuplexStackCut(inFile):
     print("Nup")
     output = nup.nup(output)
     outputStream = open(inFile[:-4] + "_DuplexStackShuffledNup.pdf", "wb")
+    output.write(outputStream)
+
+
+def addBlankPage(inFile, pages):
+
+    print("addBlankPage")
+    doc = PyPDF2.PdfFileReader(open(inFile, "rb"))
+    output = shuffle.addBlank(doc, pages)
+    outputStream = open(inFile[:-4] + "_modified.pdf", "wb")
+    output.write(outputStream)
+
+
+
+def removePage(inFile, pages):
+
+    print("addBlankPage")
+    doc = PyPDF2.PdfFileReader(open(inFile, "rb"))
+    output = shuffle.removePage(doc, pages)
+    outputStream = open(inFile[:-4] + "_modified.pdf", "wb")
     output.write(outputStream)
 
