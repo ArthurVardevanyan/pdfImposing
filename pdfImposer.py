@@ -1,11 +1,11 @@
 # pdfImposer.py
-__version__ = "v20200910"
+__version__ = "v20200911"
 
 
 import tkinter as tk
 from tkinter import filedialog
 import scripts
-import merge
+import files
 
 
 class pdfImposing:
@@ -16,8 +16,10 @@ class pdfImposing:
         self.label = tk.Label(master, text="PDF Imposing: " + __version__)
         self.label.pack()
 
-        self.upload = tk.Button(root, text='Open', command=self.UploadAction)
+        self.upload = tk.Button(
+            root, text='Open Files(s)', command=self.UploadAction)
         self.upload.pack()
+        self.FILES = []
         self.files = None
 
         self.label = tk.Label(master, text=" ")  # TODO TEMP SPACE
@@ -26,25 +28,41 @@ class pdfImposing:
         self.label = tk.Label(text="Preset Templates")
         self.label.pack()
 
+        self.duplex = tk.StringVar(value="False")
+        self.label = tk.Label(root, text="File Name:")
+        self.label.pack()
+        self.newName = tk.Entry(root)
+        self.newName.pack()
+        r1 = tk.Radiobutton(root, text='Simplex',
+                            variable=self.duplex, value="False")
+        r1.pack()
+        r2 = tk.Radiobutton(root, text='Duplex',
+                            variable=self.duplex, value="True")
+        r2.pack()
         self.SimplexMergeLabel = tk.Button(
-            root, text='SimplexMerge', command=self.SimplexMerge)
-        self.SimplexMergeLabel.pack()
 
-        self.text = tk.Button(
-            root, text='DuplexMerge', command=self.DuplexMerge)
-        self.text.pack()
+            root, text='FileMerge', command=self.fileMerge)
+        self.SimplexMergeLabel.pack()
 
         self.label = tk.Label(master, text=" ")  # TODO TEMP SPACE
         self.label.pack()
+        self.label = tk.Label(
+            master, text="Blank Page Adition / Page Removal")  # TODO TEMP SPACE
+        self.label.pack()
 
+        self.label = tk.Label(root, text="CSV:")
+        self.label.pack()
+        self.pageNumbers = tk.Entry()
+        self.pageNumbers.pack()
         self.AddBlankPageLabel = tk.Button(
-            root, text='AddBlankPage(s)', command=self.AddBlankPage)
+            root, text='AddBlankPage(s)', command=self.addSave)
         self.AddBlankPageLabel.pack()
-
         self.removePageLabel = tk.Button(
-            root, text='removePage(s)', command=self.removePage)
+            root, text='removePage(s)', command=self.removeSave)
         self.removePageLabel.pack()
 
+        self.label = tk.Label(master, text=" ")  # TODO TEMP SPACE
+        self.label.pack()
         self.label = tk.Label(master, text=" ")  # TODO TEMP SPACE
         self.label.pack()
 
@@ -81,41 +99,31 @@ class pdfImposing:
     def UploadAction(self):
         # https://stackoverflow.com/a/50135930
         filenames = filedialog.askopenfilenames()
-        print('Selected:', filenames)
+        print('Selected:', filenames)        
+        fileNames = ""
+        for path in filenames:
+            F = files.InputFiles(path)
+            self.FILES.append(F)
+            fileNames += F.name +".pdf" + "\n"        
         self.files = filenames
-        self.label = tk.Label(text=filenames)
+        self.label = tk.Label(text=fileNames)
         self.label.pack()
 
-    def SimplexMerge(self):
-        merge.mergeScript(self.files, False)
-
-    def DuplexMerge(self):
-        merge.mergeScript(self.files, True)
-
-    def AddBlankPage(self):
-        self.SaveLabel = tk.Button(
-            root, text='Save', command=self.addSave)
-        self.SaveLabel.pack()
-        self.pageNumbers = tk.Entry()
-        self.pageNumbers.pack()
-
-    def removePage(self):
-        self.SaveLabel = tk.Button(
-            root, text='Save', command=self.removeSave)
-        self.SaveLabel.pack()
-        self.pageNumbers = tk.Entry()
-        self.pageNumbers.pack()
+    def fileMerge(self):
+        scripts.mergeScript(self.FILES, self.duplex.get(), self.newName.get())
+        print("done")
 
     def addSave(self):
-        scripts.addBlankPage(self.files[0], self.pageNumbers.get())
+        scripts.addBlankPage(self.FILES, self.pageNumbers.get())
         print("done")
 
     def removeSave(self):
-        scripts.removePage(self.files[0], self.pageNumbers.get())
+        scripts.removePage(self.FILES, self.pageNumbers.get())
         print("done")
 
     def booklet(self):
-        scripts.booklet(self.files[0])
+        scripts.booklet(self.FILES)
+        print("done")
 
     def SimplexStackCut(self):
         scripts.SimplexStackCut(self.files[0])
