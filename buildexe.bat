@@ -1,5 +1,5 @@
-pyinstaller -F pdfImposer.py
+pyinstaller -F pdfImposing.py
 RMDIR "build" /S /Q
 RMDIR "__pycache__" /S /Q
-del pdfImposer.spec
+del pdfImposing.spec
 pause
