@@ -1,5 +1,5 @@
 # pdfImposer.py
-__version__ = "v20200911"
+__version__ = "v20200912"
 
 
 import tkinter as tk
@@ -9,105 +9,70 @@ import files
 
 
 class pdfImposing:
-    def __init__(self, master):
-        self.master = master
-        master.title("pdfImposing: " + __version__)
+    def __init__(self, root):
+        self.root = root
+        root.title("pdfImposing: " + __version__)
 
-        self.label = tk.Label(master, text="PDF Imposing: " + __version__)
-        self.label.pack()
+        tk.Label(root, text="PDF Imposing: " +
+                 __version__).grid(row=0, column=1, pady=2)
 
-        self.upload = tk.Button(
-            root, text='Open Files(s)', command=self.UploadAction)
-        self.upload.pack()
+        tk.Button(root, text='Open Files(s)',
+                  command=self.UploadAction).grid(row=1, column=1, pady=2)
+
         self.FILES = []
         self.files = None
-
-        self.label = tk.Label(master, text=" ")  # TODO TEMP SPACE
-        self.label.pack()
-
-        self.label = tk.Label(text="Preset Templates")
-        self.label.pack()
+        self.fileLabel = tk.Label()
 
         self.duplex = tk.StringVar(value="False")
-        self.label = tk.Label(root, text="File Name:")
-        self.label.pack()
+        tk.Label(root, text="File Name:").grid(row=3, column=0, pady=2)
         self.newName = tk.Entry(root)
-        self.newName.pack()
-        r1 = tk.Radiobutton(root, text='Simplex',
-                            variable=self.duplex, value="False")
-        r1.pack()
-        r2 = tk.Radiobutton(root, text='Duplex',
-                            variable=self.duplex, value="True")
-        r2.pack()
-        self.SimplexMergeLabel = tk.Button(
+        self.newName.grid(row=4, column=0, pady=0)
+        tk.Radiobutton(root, text='Simplex',
+                       variable=self.duplex, value="False").grid(row=5, column=0, pady=0)
 
-            root, text='FileMerge', command=self.fileMerge)
-        self.SimplexMergeLabel.pack()
+        tk.Radiobutton(root, text='Duplex',
+                       variable=self.duplex, value="True").grid(row=6, column=0, pady=0)
 
-        self.label = tk.Label(master, text=" ")  # TODO TEMP SPACE
-        self.label.pack()
-        self.label = tk.Label(
-            master, text="Blank Page Adition / Page Removal")  # TODO TEMP SPACE
-        self.label.pack()
+        tk.Button(root, text='FileMerge',
+                  command=self.fileMerge).grid(row=7, column=0, pady=1)
 
-        self.label = tk.Label(root, text="CSV:")
-        self.label.pack()
+        tk.Label(root, text="CSV:").grid(row=3, column=1, pady=0)
         self.pageNumbers = tk.Entry()
-        self.pageNumbers.pack()
-        self.AddBlankPageLabel = tk.Button(
-            root, text='AddBlankPage(s)', command=self.addSave)
-        self.AddBlankPageLabel.pack()
-        self.removePageLabel = tk.Button(
-            root, text='removePage(s)', command=self.removeSave)
-        self.removePageLabel.pack()
+        self.pageNumbers.grid(row=4, column=1, pady=1)
 
-        self.label = tk.Label(master, text=" ")  # TODO TEMP SPACE
-        self.label.pack()
-        self.label = tk.Label(master, text=" ")  # TODO TEMP SPACE
-        self.label.pack()
+        tk.Button(root, text='AddBlankPage(s)', command=self.addSave).grid(
+            row=5, column=1, pady=0)
+        tk.Button(root, text='removePage(s)', command=self.removeSave).grid(
+            row=6, column=1, pady=0)
 
-        self.bookletLabel = tk.Button(
-            root, text='Create Booklet', command=self.booklet)
-        self.bookletLabel.pack()
+        tk.Label(root, text="Other:").grid(row=3, column=2, pady=2)
+        tk.Button(root, text='Create Booklet', command=self.booklet).grid(
+            row=4, column=2, pady=(0, 15))
 
-        self.label = tk.Label(master, text=" ")  # TODO TEMP SPACE
-        self.label.pack()
+        tk.Button(
+            root, text='SimplexStackCut', command=self.SimplexStackCut).grid(row=5, column=2, pady=0)
 
-        self.SimplexStackCutLabel = tk.Button(
-            root, text='SimplexStackCut', command=self.SimplexStackCut)
-        self.SimplexStackCutLabel.pack()
-
-        self.DuplexStackCutLabel = tk.Button(
-            root, text='DuplexStackCut', command=self.DuplexStackCut)
-        self.DuplexStackCutLabel.pack()
-
-        self.label = tk.Label(master, text=" ")  # TODO TEMP SPACE
-        self.label.pack()
-
-        self.ledgerSimplexTwoUpLabel = tk.Button(
-            root, text='ledgerSimplexTwoUp', command=self.ledgerSimplexTwoUp)
-        self.ledgerSimplexTwoUpLabel.pack()
-
-        self.ledgerDuplexTwoUpSpinCutLabel = tk.Button(
-            root, text='ledgerDuplexTwoUpSpinCut', command=self.ledgerDuplexTwoUpSpinCut)
-        self.ledgerDuplexTwoUpSpinCutLabel.pack()
-
-        self.ledgerSimplexTwoUpSpinCutLabel = tk.Button(
-            root, text='ledgerSimplexTwoUpSpinCut', command=self.ledgerSimplexTwoUpSpinCut)
-        self.ledgerSimplexTwoUpSpinCutLabel.pack()
+        tk.Button(
+            root, text='DuplexStackCut', command=self.DuplexStackCut).grid(row=6, column=2, pady=(0, 15))
+        tk.Button(root, text='ledgerSimplexTwoUp',
+                  command=self.ledgerSimplexTwoUp).grid(row=7, column=2, pady=0)
+        tk.Button(root, text='ledgerDuplexTwoUpSpinCut',
+                  command=self.ledgerDuplexTwoUpSpinCut).grid(row=8, column=2, pady=0)
+        tk.Button(root, text='ledgerSimplexTwoUpSpinCut',
+                  command=self.ledgerSimplexTwoUpSpinCut).grid(row=9, column=2, pady=0)
 
     def UploadAction(self):
         # https://stackoverflow.com/a/50135930
         filenames = filedialog.askopenfilenames()
-        print('Selected:', filenames)        
+        print('Selected:', filenames)
+        self.files = filenames
         fileNames = ""
         for path in filenames:
             F = files.InputFiles(path)
             self.FILES.append(F)
-            fileNames += F.name +".pdf" + "\n"        
-        self.files = filenames
-        self.label = tk.Label(text=fileNames)
-        self.label.pack()
+            fileNames += F.name + ".pdf" + "\n"
+        self.fileLabel['text'] = fileNames
+        self.fileLabel.grid(row=2, column=1)
 
     def fileMerge(self):
         scripts.mergeScript(self.FILES, self.duplex.get(), self.newName.get())
@@ -142,5 +107,6 @@ class pdfImposing:
 
 
 root = tk.Tk()
+
 my_gui = pdfImposing(root)
 root.mainloop()
