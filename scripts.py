@@ -1,10 +1,9 @@
 
-__version__ = "v20200911"
+__version__ = "v20200912"
 import os
 import sys
 import PyPDF2
 import time
-import margin
 import shuffle
 import nup
 import files
@@ -34,12 +33,11 @@ def removePage(FILES, pages):
         output.export()
 
 
-def booklet(FILES):
+def booklet(FILES, margin):
     for f in FILES:
         output = files.ExportFiles(f.filePath(), extension="booklet")
         print("Margins")
-        output.doc = margin.margin(f.doc)
-        print("Booklet Shuffle 1")
+        output.doc = nup.resize(f.doc, margin=margin)
         output.doc = shuffle.bookletShuffle(output.doc)
         print("Booklet Shuffle 2")
         temp = "temp.pdf"
@@ -50,11 +48,12 @@ def booklet(FILES):
         docR = PyPDF2.PdfFileReader(inFileR)
         output.doc = shuffle.normalShuffle(output.doc, docR, "1 2 4 3 ")
         print("Nup")
+
         output.doc = nup.nup(output.doc)
         output.export()
 
-        inFileR.close()
-        outputStream.close()
+        # inFileR.close()
+        # outputStream.close()
 
         filePath = "temp.pdf"
         if os.path.exists(filePath):
@@ -70,7 +69,7 @@ def ledgerDuplexTwoUpSpinCut(inFile, outFile=None):
 
     doc = PyPDF2.PdfFileReader(open(inFile, "rb"))
     print("Margins")
-    output = margin.margin(doc)
+    output = nup.resize(doc)
     temp = "temp.pdf"
     outputStream = open(temp, "wb")
     output.write(outputStream)
@@ -101,7 +100,7 @@ def ledgerSimplexTwoUp(inFile, outFile=None):
 
     doc = PyPDF2.PdfFileReader(open(inFile, "rb"))
     print("Margins")
-    output = margin.margin(doc)
+    output = nup.resize(doc)
     print("Shuffle")
     output = shuffle.normalShuffle(output, output, "1 1 ")
     print("Nup")
@@ -121,7 +120,7 @@ def ledgerSimplexTwoUpSpinCut(inFile, outFile=None):
 
     doc = PyPDF2.PdfFileReader(open(inFile, "rb"))
     print("Margins")
-    output = margin.margin(doc)
+    output = nup.resize(doc)
     print("Shuffle")
     output = shuffle.normalShuffle(output, output, "1*1 ")
     print("Nup")

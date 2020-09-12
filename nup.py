@@ -1,9 +1,45 @@
 # nup.py
-__version__ = "v20200121"
+__version__ = "v20200912"
 
 import PyPDF2
 
 # Starting Point https://github.com/mstamy2/PyPDF2/blob/master/Scripts/2-up.py
+
+
+def resize(doc, w=None, h=None, margin=1):
+    output = PyPDF2.PdfFileWriter()
+    # TODO Intergrate
+
+    for iter in range(0, doc.getNumPages()):
+        page = doc.getPage(iter)
+        pageWidth = float(page.mediaBox.getWidth())
+        pageHeight = float(page.mediaBox.getHeight())
+
+        if (w and h):
+            width = w * 72
+            height = h * 72
+        else:
+            width = pageWidth
+            height = pageHeight
+
+        short = width/pageWidth
+        longer = height/pageHeight
+
+        if short > longer:
+            temp = short
+            short = longer
+            longer = temp
+        marginScale = margin*(short)
+        docS = PyPDF2.pdf.PageObject.createBlankPage(
+            page, pageWidth * width/pageWidth,  pageHeight*height/pageHeight)
+        leftmargin = (width - float(pageWidth * marginScale))/2
+        bottommargin = (
+            (height-float(pageHeight * marginScale))/2)
+        docS.mergeScaledTranslatedPage(
+            page, marginScale, leftmargin, bottommargin)
+        output.addPage(docS)
+
+    return output
 
 
 def nup(doc):
@@ -28,7 +64,6 @@ def nup(doc):
             lhs.mergeTranslatedPage(
                 rhs, 0, lhs.mediaBox.getUpperRight_y(), True)
 
-           
         else:
             lhs.mergeTranslatedPage(
                 rhs, lhs.mediaBox.getUpperRight_x(), 0, True)
