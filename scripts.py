@@ -1,5 +1,5 @@
 
-__version__ = "v20200912"
+__version__ = "v20200913"
 import os
 import sys
 import PyPDF2
@@ -52,8 +52,8 @@ def booklet(FILES, margin):
         output.doc = nup.nup(output.doc)
         output.export()
 
-        # inFileR.close()
-        # outputStream.close()
+        inFileR.close()
+        outputStream.close()
 
         filePath = "temp.pdf"
         if os.path.exists(filePath):
