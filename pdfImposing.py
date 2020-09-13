@@ -1,5 +1,5 @@
 # pdfImposer.py
-__version__ = "v20200912"
+__version__ = "v20200913"
 
 
 import tkinter as tk
@@ -51,8 +51,7 @@ class pdfImposing:
         self.margin.grid(row=4, column=1, padx=5, pady=0)
         tk.Button(root, text='Create Booklet', command=self.booklet).grid(
             row=5, column=1, padx=5, pady=3)
-        
-        
+
         tk.Button(
             root, text='SimplexStackCut', command=self.SimplexStackCut).grid(row=7, column=1, padx=5, pady=0)
 
@@ -71,6 +70,7 @@ class pdfImposing:
         print('Selected:', filenames)
         self.files = filenames
         fileNames = ""
+        self.FILES = []
         for path in filenames:
             F = files.InputFiles(path)
             self.FILES.append(F)
