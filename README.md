@@ -10,4 +10,4 @@ This (currently) cross platform software runs stand-alone, and (currently) does 
 
 ![PDFImposing](img/PDFImposing.png)
 
-If you are looking for a more robust commercial solution, I recommend trying: [Quite Imposing ](http://www.quite.com/imposing/)<br>This does require Adobe Acrobat to be installed. 
+If you are looking for a more robust commercial solution, I recommend trying: [Quite Imposing ](http://www.quite.com/imposing/)<br>This does require Adobe Acrobat Pro to be installed. 
