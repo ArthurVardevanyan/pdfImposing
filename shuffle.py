@@ -1,5 +1,5 @@
 # shuffle.py
-__version__ = "v20200911"
+__version__ = "v20200915"
 
 import PyPDF2
 
@@ -18,45 +18,41 @@ def merge(FILES, DUPLEX):
     return output
 
 
-def addBlank(doc, pages):
+def blank(doc, pages, operation):
     output = PyPDF2.PdfFileWriter()
     pages = pages.replace(" ", "")
     pages = [int(n) for n in list(pages.split(","))]
     pages.sort()
     additional = 0
-    for iter in range(0, doc.getNumPages()):
-        output.addPage(doc.getPage(iter))
-    for page in pages:
-        if page >= doc.getNumPages():
-            blank = PyPDF2.pdf.PageObject.createBlankPage(doc)
-            output.addPage(blank)
-        else:
-            output.insertBlankPage(index=page+additional)
-            additional += 1
-    return output
 
-
-def removePage(doc, pages):
-    output = PyPDF2.PdfFileWriter()
-    pages = pages.replace(" ", "")
-    pages = [int(n) for n in list(pages.split(","))]
-    pages.sort()
-    additional = 0
-    for iter in range(0, doc.getNumPages()):
-        if(len(pages)):
-            if pages[0] == iter + 1:
-                pages.pop(0)
+    if(operation == "add"):
+        print("addBlankPage")
+        for iter in range(0, doc.getNumPages()):
+            output.addPage(doc.getPage(iter))
+        for page in pages:
+            if page >= doc.getNumPages():
+                blank = PyPDF2.pdf.PageObject.createBlankPage(doc)
+                output.addPage(blank)
+            else:
+                output.insertBlankPage(index=page+additional)
+                additional += 1
+    else:
+        print("removePage")
+        for iter in range(0, doc.getNumPages()):
+            if(len(pages)):
+                if pages[0] == iter + 1:
+                    pages.pop(0)
+                else:
+                    output.addPage(doc.getPage(iter))
             else:
                 output.addPage(doc.getPage(iter))
-        else:
-            output.addPage(doc.getPage(iter))
-    for page in pages:
-        if page >= doc.getNumPages():
-            blank = PyPDF2.pdf.PageObject.createBlankPage(doc)
-            output.addPage(blank)
-        else:
-            output.insertBlankPage(index=page+additional)
-            additional += 1
+        for page in pages:
+            if page >= doc.getNumPages():
+                blank = PyPDF2.pdf.PageObject.createBlankPage(doc)
+                output.addPage(blank)
+            else:
+                output.insertBlankPage(index=page+additional)
+                additional += 1
     return output
 
 
