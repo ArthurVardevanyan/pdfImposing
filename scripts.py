@@ -1,5 +1,5 @@
 
-__version__ = "v20200913"
+__version__ = "v20200915"
 import os
 import sys
 import PyPDF2
@@ -16,24 +16,14 @@ def mergeScript(FILES, DUPLEX, newName):
     output.export()
 
 
-def addBlankPage(FILES, pages):
-    print("addBlankPage")
+def blankScript(FILES, pages, operation):
     for f in FILES:
         output = files.ExportFiles(
-            f.filePath(), shuffle.addBlank(f.doc, pages))
+            f.filePath(), shuffle.blank(f.doc, pages, operation))
         output.export()
 
 
-def removePage(FILES, pages):
-
-    print("removePage")
-    for f in FILES:
-        output = files.ExportFiles(
-            f.filePath(), shuffle.removePage(f.doc, pages))
-        output.export()
-
-
-def booklet(FILES, margin):
+def booklet(FILES, margin=1):
     for f in FILES:
         output = files.ExportFiles(f.filePath(), extension="booklet")
         print("Margins")
