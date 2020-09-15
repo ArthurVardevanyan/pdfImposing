@@ -1,5 +1,5 @@
 # pdfImposer.py
-__version__ = "v20200913"
+__version__ = "v20200915"
 
 
 import tkinter as tk
@@ -83,11 +83,11 @@ class pdfImposing:
         print("done")
 
     def addSave(self):
-        scripts.addBlankPage(self.FILES, self.pageNumbers.get())
+        scripts.blankScript(self.FILES, self.pageNumbers.get(), "add")
         print("done")
 
     def removeSave(self):
-        scripts.removePage(self.FILES, self.pageNumbers.get())
+        scripts.blankScript(self.FILES, self.pageNumbers.get(), "remove")
         print("done")
 
     def booklet(self):
